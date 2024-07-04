@@ -20,19 +20,25 @@ function Event(props: EventProps) {
         position: 'absolute',
         top: top,
         left: left,
+        display: 'flex',
+        flexDirection: height > 20 ? 'column' : 'row', // change orientation according to height
       }}
     >
-      <div
-        style={{
-          color: '#1D4FD7',
-          fontWeight: 'bold',
-          marginLeft: 10,
-          marginTop: 10,
-        }}
-      >
-        Sample Item
-      </div>
-      <div style={{ marginLeft: 10, color: 'grey' }}>Sample Location</div>
+      {height >= 20 ? (
+        <>
+          <div
+            style={{
+              color: '#1D4FD7',
+              fontWeight: 'bold',
+              marginLeft: 10,
+              marginTop: height > 20 ? 10 : 0,
+            }}
+          >
+            Sample Item
+          </div>
+          <div style={{ marginLeft: 10, color: 'grey' }}>Sample Location</div>
+        </>
+      ) : null}
     </div>
   );
 }
