@@ -21,7 +21,7 @@ function Event(props: EventProps) {
         top: top,
         left: left,
         display: 'flex',
-        flexDirection: height > 20 ? 'column' : 'row', // change orientation according to height
+        flexDirection: height > 40 ? 'column' : 'row', // change orientation according to height
       }}
     >
       {height >= 20 ? (
@@ -31,7 +31,7 @@ function Event(props: EventProps) {
               color: '#1D4FD7',
               fontWeight: 'bold',
               marginLeft: 10,
-              marginTop: height > 20 ? 10 : 0,
+              marginTop: height > 40 ? 10 : 0,
             }}
           >
             Sample Item

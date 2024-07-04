@@ -28,9 +28,10 @@ const splitOverlappingEventsInColumns: (
   if (events.length === 0) {
     return formatedEvents;
   }
+
   const currentEvent = events[0];
-  const overlappingEvents: myCalendarEvent[] = [];
-  const notOverlappingEvents: FormatedCalendarEvent[] = [
+  const otherColumnEvents: myCalendarEvent[] = [];
+  const sameColumnEvents: FormatedCalendarEvent[] = [
     {
       ...currentEvent,
       column: columnIndex,
@@ -38,29 +39,44 @@ const splitOverlappingEventsInColumns: (
     },
   ];
 
-  for (let i = 0; i < events.length; i++) {
+  for (let j = 0; j < events.length; j++) {
     if (
-      currentEvent.start <= events[i].end &&
-      currentEvent.end >= events[i].start &&
-      currentEvent.id !== events[i].id
+      currentEvent.start < events[j].end &&
+      currentEvent.end > events[j].start &&
+      currentEvent.id !== events[j].id
     ) {
-      //overlaps = true;
-      overlappingEvents.push(events[i]);
-    } else if (currentEvent.id !== events[i].id) {
-      notOverlappingEvents.push({
-        ...events[i],
-        column: columnIndex,
-        width: MAX_WIDTH / 2, // to be change if we can have 3 columns
-      });
+      // event overlaps, move it to another column
+      otherColumnEvents.push(events[j]);
+    } else if (currentEvent.id !== events[j].id) {
+      let overlaps = false;
+      for (let k = 0; k < sameColumnEvents.length; k++) {
+        if (
+          events[j].start < sameColumnEvents[k].end &&
+          events[j].end > sameColumnEvents[k].start &&
+          events[j].id !== sameColumnEvents[k].id
+        ) {
+          overlaps = true;
+        }
+      }
+      if (!overlaps) {
+        sameColumnEvents.push({
+          ...events[j],
+          column: columnIndex,
+          width: MAX_WIDTH / 2,
+        });
+      } else {
+        // event overlaps, move it to another column
+        otherColumnEvents.push(events[j]);
+      }
     }
   }
 
-  if (overlappingEvents.length === 0) {
-    return formatedEvents.concat(notOverlappingEvents);
+  if (otherColumnEvents.length === 0) {
+    return formatedEvents.concat(sameColumnEvents);
   } else {
     return splitOverlappingEventsInColumns(
-      overlappingEvents,
-      formatedEvents.concat(notOverlappingEvents),
+      otherColumnEvents,
+      formatedEvents.concat(sameColumnEvents),
       columnIndex + 1,
     );
   }
@@ -89,8 +105,8 @@ export const splitEventsInColumns: (
     let overlaps = false;
     for (let j = 0; j < myEvents.length; j++) {
       if (
-        myEvents[i].start <= myEvents[j].end &&
-        myEvents[i].end >= myEvents[j].start &&
+        myEvents[i].start < myEvents[j].end &&
+        myEvents[i].end > myEvents[j].start &&
         myEvents[i].id !== myEvents[j].id
       ) {
         overlaps = true;
@@ -98,8 +114,8 @@ export const splitEventsInColumns: (
     }
     for (let k = 0; k < notOverlappingEvents.length; k++) {
       if (
-        myEvents[i].start <= notOverlappingEvents[k].end &&
-        myEvents[i].end >= notOverlappingEvents[k].start &&
+        myEvents[i].start < notOverlappingEvents[k].end &&
+        myEvents[i].end > notOverlappingEvents[k].start &&
         myEvents[i].id !== notOverlappingEvents[k].id
       ) {
         overlaps = true;
@@ -116,7 +132,7 @@ export const splitEventsInColumns: (
     }
   }
 
-  // SECOND - for all overlapping events display then in several columns
+  // SECOND - for all overlapping events display them in several columns
   return splitOverlappingEventsInColumns(
     overlappingEvents,
     notOverlappingEvents,
