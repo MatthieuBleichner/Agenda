@@ -59,8 +59,7 @@ function App() {
             height: config.hoursInPixels * config.displayedHours,
             backgroundColor: '#e0e0e0',
             borderLeft: '1px solid rgba(0, 0, 0, 0.2)',
-            paddingRight: '10px',
-            paddingLeft: 5, // 10 - border
+            boxSizing: 'border-box',
             position: 'relative',
           }}
         >

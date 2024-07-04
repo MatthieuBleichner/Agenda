@@ -16,6 +16,7 @@ function Event(props: EventProps) {
         backgroundColor: 'white',
         border: '1px solid rgba(0, 0, 0, 0.2)',
         borderLeft: '4px solid #1D4FD7',
+        boxSizing: 'border-box',
         position: 'absolute',
         top: top,
         left: left,
