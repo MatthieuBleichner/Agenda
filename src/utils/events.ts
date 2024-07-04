@@ -1,4 +1,5 @@
 import { CalendarEvent } from 'types';
+import config from 'config';
 
 interface myCalendarEvent {
   id: string;
@@ -15,7 +16,7 @@ interface FormatedCalendarEvent {
 
 const MAX_WIDTH = 600;
 
-const splitEventsInColumns: (
+const splitOverlappingEventsInColumns: (
   arg0: myCalendarEvent[],
   arg1?: FormatedCalendarEvent[],
   arg2?: number,
@@ -57,7 +58,7 @@ const splitEventsInColumns: (
   if (overlappingEvents.length === 0) {
     return formatedEvents.concat(notOverlappingEvents);
   } else {
-    return splitEventsInColumns(
+    return splitOverlappingEventsInColumns(
       overlappingEvents,
       formatedEvents.concat(notOverlappingEvents),
       columnIndex + 1,
@@ -65,14 +66,18 @@ const splitEventsInColumns: (
   }
 };
 
-export const buildEventsOverlappingArray: (
+export const splitEventsInColumns: (
   arg0: CalendarEvent[],
   arg1?: number,
 ) => FormatedCalendarEvent[] = (events) => {
+  // Format events to ensure start and end values are relevant and add an id
   const myEvents: myCalendarEvent[] = events.map((event, index) => ({
     id: `${index}`,
-    start: event.start,
-    end: event.end,
+    start: event.start > 0 ? event.start : 0,
+    end:
+      event.end < config.displayedHours * 60
+        ? event.end
+        : config.displayedHours * 60,
   }));
 
   // First - Build list of events that does not overlap whith any other event
@@ -112,5 +117,8 @@ export const buildEventsOverlappingArray: (
   }
 
   // SECOND - for all overlapping events display then in several columns
-  return splitEventsInColumns(overlappingEvents, notOverlappingEvents);
+  return splitOverlappingEventsInColumns(
+    overlappingEvents,
+    notOverlappingEvents,
+  );
 };

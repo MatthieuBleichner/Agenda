@@ -1,4 +1,4 @@
-import { buildEventsOverlappingArray } from './events';
+import { splitEventsInColumns } from './events';
 import { CalendarEvent } from 'types';
 
 const singleEvent: CalendarEvent[] = [
@@ -25,7 +25,7 @@ const fourOverlappingEventsInThreeColumns: CalendarEvent[] = [
 ];
 
 test('return valid result for one event', () => {
-  const res = buildEventsOverlappingArray(singleEvent);
+  const res = splitEventsInColumns(singleEvent);
   expect(res.length).toBe(1);
   expect(res[0].start).toBe(30);
   expect(res[0].end).toBe(60);
@@ -34,7 +34,7 @@ test('return valid result for one event', () => {
 });
 
 test('return valid result for two NOT overlapping events', () => {
-  const res = buildEventsOverlappingArray(twoBasicEvents);
+  const res = splitEventsInColumns(twoBasicEvents);
   expect(res.length).toBe(2);
   expect(res[0].width).toBe(600);
   expect(res[0].column).toBe(0);
@@ -43,7 +43,7 @@ test('return valid result for two NOT overlapping events', () => {
 });
 
 test('return valid result when two events overlap', () => {
-  const res = buildEventsOverlappingArray(twoOverlappingEvents);
+  const res = splitEventsInColumns(twoOverlappingEvents);
   expect(res.length).toBe(2);
   expect(res[0].width).toBe(300);
   expect(res[0].column).toBe(0);
