@@ -188,7 +188,7 @@ export const splitEventsInColumns: (arg0: CalendarEvent[]) => Event[] = (
     1,
   );
 
-  const res: Record<string, Event> = {};
+  const res: Record<string, Event> = {}; //@todo res should be the result of adjustElementsWidth
   // Recursive function used to set correct width of all events
   const adjustElementsWidth: (
     arg0: CalendarEventWithId,
