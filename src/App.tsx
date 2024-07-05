@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import './App.css';
 import { Timeline, Event } from 'components';
 import config from 'config';
 import { CalendarEvent } from 'types';
